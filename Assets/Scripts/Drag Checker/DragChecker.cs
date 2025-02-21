@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class DragChecker : MonoBehaviour
 {
+    public enum CheckerState
+    {
+        Idle,
+        Dragging,
+        End
+    }
+
     [SerializeField] private GameObject checkerObject;
 
     private Transform _checkerTransform;
@@ -12,9 +19,19 @@ public class DragChecker : MonoBehaviour
     private Vector2 _startPos;
     private Vector2 _endPos;
 
+    private CheckerState _state = CheckerState.Idle;
+
+    public CheckerState State => _state;
+    public float TopY => _checkerTransform.position.y + Mathf.Abs(_checkSpriteRenderer.size.y) / 2f;
+    public float BottomY => _checkerTransform.position.y - Mathf.Abs(_checkSpriteRenderer.size.y) / 2f;
+    public float LeftX => _checkerTransform.position.x - Mathf.Abs(_checkSpriteRenderer.size.x) / 2f;
+    public float RightX => _checkerTransform.position.x + Mathf.Abs(_checkSpriteRenderer.size.x) / 2f;
+
+    public SpriteRenderer CheckerSpriteRenderer => _checkSpriteRenderer;
+
     private void Start()
     {
-        if(!checkerObject.TryGetComponent(out _checkerTransform))
+        if (!checkerObject.TryGetComponent(out _checkerTransform))
         {
             Debug.Log("½ÇÆÐ: Transform");
         }
@@ -27,6 +44,7 @@ public class DragChecker : MonoBehaviour
 
     private void Update()
     {
+        _state = CheckerState.Idle;
         CheckerMouseDown();
         CheckerMouseDrag();
         CheckerMouseUp();
@@ -51,10 +69,11 @@ public class DragChecker : MonoBehaviour
     private void CheckerMouseDrag()
     {
         if (Input.GetMouseButton(0))
-        {
+        { 
             Vector2 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if(_endPos != currentMousePos)
             {
+                _state = CheckerState.Dragging;
                 _endPos = currentMousePos;
                 SetCheckerTransform();
             }
@@ -77,7 +96,13 @@ public class DragChecker : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
+            _state = CheckerState.End;
             checkerObject.SetActive(false);
         }
+    }
+
+    public float[] GetCheckerSize()
+    {
+        return new float[] { LeftX, RightX, TopY, BottomY };
     }
 }

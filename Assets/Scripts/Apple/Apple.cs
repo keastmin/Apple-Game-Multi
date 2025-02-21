@@ -9,6 +9,8 @@ public class Apple : MonoBehaviour
     [SerializeField] private int maxNum = 9;
 
     public TextMeshPro NumberText;
+    public GameObject AppleEdge;
+    public SpriteRenderer AppleSprite;
     public Rigidbody2D AppleRigidbody;
 
     private int _number;

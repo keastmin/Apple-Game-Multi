@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DragChecker : MonoBehaviour
 {
@@ -43,9 +44,17 @@ public class DragChecker : MonoBehaviour
     private void Update()
     {
         _state = CheckerState.Idle;
-        CheckerMouseDown();
-        CheckerMouseDrag();
-        CheckerMouseUp();
+        CheckMouseEvent();
+    }
+
+    private void CheckMouseEvent()
+    {
+        if (!UIManager.Instance.MenuPanelActive && !UIManager.Instance.ScorePanelActive)
+        {
+            CheckerMouseDown();
+            CheckerMouseDrag();
+            CheckerMouseUp();
+        }
     }
 
     private void CheckerMouseDown()

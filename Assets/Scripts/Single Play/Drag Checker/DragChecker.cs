@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DragChecker : MonoBehaviour
@@ -69,9 +67,9 @@ public class DragChecker : MonoBehaviour
     private void CheckerMouseDrag()
     {
         if (Input.GetMouseButton(0))
-        { 
+        {
             Vector2 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if(_endPos != currentMousePos)
+            if (_endPos != currentMousePos)
             {
                 _state = CheckerState.Dragging;
                 _endPos = currentMousePos;
@@ -97,6 +95,7 @@ public class DragChecker : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             _state = CheckerState.End;
+            CheckerSpriteRenderer.color = new Vector4(1, 0, 0, 0.4f);
             checkerObject.SetActive(false);
         }
     }

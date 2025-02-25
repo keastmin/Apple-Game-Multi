@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +15,7 @@ public class ObjectPool : MonoBehaviour
     {
         _poolQueue = new Queue<GameObject>();
 
-        for(int i = 0; i < poolSize; i++)
+        for (int i = 0; i < poolSize; i++)
         {
             GameObject obj = Instantiate(poolObject, poolPosition, Quaternion.identity, transform);
             obj.SetActive(false);

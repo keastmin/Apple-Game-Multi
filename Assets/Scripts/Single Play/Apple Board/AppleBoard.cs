@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class Cell
 {
@@ -66,11 +64,11 @@ public class AppleBoard : MonoBehaviour
     private void Update()
     {
         // 드래그 체커 상태에 따라 사과 변경
-        if(_dragChecker.State == DragChecker.CheckerState.Dragging)
+        if (_dragChecker.State == DragChecker.CheckerState.Dragging)
         {
             CheckAppleInRange();
         }
-        else if(_dragChecker.State == DragChecker.CheckerState.End)
+        else if (_dragChecker.State == DragChecker.CheckerState.End)
         {
             EndCheckApple();
         }
@@ -97,11 +95,11 @@ public class AppleBoard : MonoBehaviour
         // 그리드 초기화
         _cells = new Cell[_col, _row];
 
-        for(int i = 0; i < _col; i++)
+        for (int i = 0; i < _col; i++)
         {
             float posX = _gridAnchor.x + (_spaceX / 2f) + (_spaceX * i);
 
-            for(int j = 0; j < _row; j++)
+            for (int j = 0; j < _row; j++)
             {
                 float posY = _gridAnchor.y + (_spaceY / 2f) + (_spaceY * j);
                 Vector3 pos = new Vector3(posX, posY, 0f);
@@ -116,7 +114,7 @@ public class AppleBoard : MonoBehaviour
             }
         }
     }
-    
+
     /// <summary>
     /// 사과 생성 메소드
     /// </summary>
@@ -153,8 +151,8 @@ public class AppleBoard : MonoBehaviour
             {
                 Vector3 pos = GetApplePos(cell);
                 Apple apple = cell.C_Apple;
-                
-                if(pos.x > _dragChecker.LeftX && pos.x < _dragChecker.RightX && pos.y > _dragChecker.BottomY && pos.y < _dragChecker.TopY)
+
+                if (pos.x > _dragChecker.LeftX && pos.x < _dragChecker.RightX && pos.y > _dragChecker.BottomY && pos.y < _dragChecker.TopY)
                 {
                     apple.AppleEdge.SetActive(true);
                     sum += apple.Number;
@@ -166,7 +164,7 @@ public class AppleBoard : MonoBehaviour
             }
         }
 
-        if(sum == 10)
+        if (sum == 10)
         {
             _dragChecker.CheckerSpriteRenderer.color = new Vector4(1, 0, 0, 0.4f);
         }
@@ -195,20 +193,20 @@ public class AppleBoard : MonoBehaviour
             }
         }
 
-        foreach(var cell in selectedCells)
+        foreach (var cell in selectedCells)
         {
             Apple apple = cell.C_Apple;
             apple.AppleEdge.SetActive(false);
             sum += apple.Number;
         }
 
-        if(sum == 10)
+        if (sum == 10)
         {
             FindCorrectNumberApples(selectedCells);
         }
         else
         {
-            foreach(var cell in selectedCells)
+            foreach (var cell in selectedCells)
             {
                 cell.C_Apple.AppleEdge.SetActive(false);
             }

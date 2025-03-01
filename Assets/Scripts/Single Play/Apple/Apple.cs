@@ -27,13 +27,13 @@ public class Apple : MonoBehaviour
 
     private void Start()
     {
-        SetNumber();
+        // SetNumber();
     }
 
     /// <summary>
     /// 사과 생성시 랜덤 숫자 지정
     /// </summary>
-    private void SetNumber()
+    public void SetNumber()
     {
         Number = Random.Range(minNum, maxNum + 1);
     }

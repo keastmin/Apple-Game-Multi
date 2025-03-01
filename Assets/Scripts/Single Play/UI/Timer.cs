@@ -1,3 +1,4 @@
+using SinglePlay.Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,11 @@ public class Timer : MonoBehaviour
         InitTimeValue();
     }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        GameManager.Instance.OnRestartGame += InitTimeValue;
+    }
+
     void Update()
     {
         FlowTime();
@@ -33,6 +38,7 @@ public class Timer : MonoBehaviour
             timerSlider.value = 1f;
         }
     }
+
     private void InitTimeValue()
     {
         _maxTime = timeLimit;
@@ -50,6 +56,11 @@ public class Timer : MonoBehaviour
             timerSlider.value = _currentTime / _maxTime;
             _currentTime = Mathf.Max(0f, _currentTime - Time.deltaTime);
         }
+        else if(_currentTime == 0 && !GameManager.Instance.IsGameEnd)
+        {
+            GameManager.Instance.GameEnd();
+            UIManager.Instance.TimeEnd();
+        }      
     }
 
     #endregion

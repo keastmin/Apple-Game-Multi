@@ -17,19 +17,24 @@ public class ObjectPool : MonoBehaviour
 
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject obj = Instantiate(poolObject, poolPosition, Quaternion.identity, transform);
-            obj.SetActive(false);
-            _poolQueue.Enqueue(obj);
+            CreateObject();
         }
+    }
+
+    private void CreateObject()
+    {
+        GameObject obj = Instantiate(poolObject, poolPosition, Quaternion.identity, transform);
+        obj.SetActive(false);
+        _poolQueue.Enqueue(obj);
     }
 
     public GameObject GetObject()
     {
         if (_poolQueue.Count <= 0)
         {
-            Debug.LogError("Pool is empty");
-            return null;
+            CreateObject();
         }
+
         GameObject obj = _poolQueue.Dequeue();
         obj.SetActive(true);
         obj.transform.SetParent(null);

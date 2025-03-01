@@ -1,5 +1,7 @@
+using SinglePlay.Manager;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,9 +11,16 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject MenuPanel;
     [SerializeField] private GameObject ScorePanel;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI timeOutScoreText;
 
     public bool MenuPanelActive => MenuPanel.activeSelf;
     public bool ScorePanelActive => ScorePanel.activeSelf;
+    public int Score
+    {
+        get => int.Parse(scoreText.text);
+        set => scoreText.text = value.ToString();
+    }
 
     private void Awake()
     {
@@ -19,11 +28,12 @@ public class UIManager : MonoBehaviour
         {
             Instance = this;
         }
+        InitUIManager();
     }
 
     private void Start()
     {
-        InitPanelVisible();
+        GameManager.Instance.OnRestartGame += InitUIManager;
     }
 
     void Update()
@@ -31,10 +41,21 @@ public class UIManager : MonoBehaviour
         MenuButtonKeyboardTab();
     }
 
+    private void InitUIManager()
+    {
+        InitPanelVisible();
+        InitTextString();
+    }
+
     private void InitPanelVisible()
     {
         MenuPanel.SetActive(false);
         ScorePanel.SetActive(false);
+    }
+
+    private void InitTextString()
+    {
+        Score = 0;
     }
 
     private void MenuButtonKeyboardTab()
@@ -53,5 +74,16 @@ public class UIManager : MonoBehaviour
     public void OnClickQuitButton()
     {
         SceneManager.LoadScene("StartMenuScene");
+    }
+
+    public void OnClickRestartButton()
+    {
+        GameManager.Instance.RestartGame();
+    }
+
+    public void TimeEnd()
+    {
+        timeOutScoreText.text = scoreText.text;
+        ScorePanel.SetActive(true);
     }
 }

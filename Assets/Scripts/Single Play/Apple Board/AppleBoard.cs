@@ -1,3 +1,4 @@
+using SinglePlay.Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -132,8 +133,6 @@ public class AppleBoard : MonoBehaviour
         }
     }
 
-
-
     private void GetApple(Cell cell)
     {
         Vector3 pos = GetApplePos(cell);
@@ -203,6 +202,7 @@ public class AppleBoard : MonoBehaviour
         if (sum == 10)
         {
             FindCorrectNumberApples(selectedCells);
+            GameManager.Instance.Score += selectedCells.Count;
         }
         else
         {

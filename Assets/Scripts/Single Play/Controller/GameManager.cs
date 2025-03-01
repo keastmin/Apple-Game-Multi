@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -12,7 +13,23 @@ namespace SinglePlay.Manager
         [SerializeField] private Timer timer;
 
         private int _score;
-        public int Score => _score;
+        public int Score
+        {
+            get
+            {
+                return _score;
+            }
+            set
+            {
+                _score = value;
+                UIManager.Instance.Score = _score;
+            }
+        }
+
+        private bool _isGameEnd;
+        public bool IsGameEnd => _isGameEnd;
+
+        public event Action OnRestartGame;
 
         private void Awake()
         {
@@ -26,7 +43,7 @@ namespace SinglePlay.Manager
 
         void Start()
         {
-
+            OnRestartGame += InitValue;
         }
 
         void Update()
@@ -38,9 +55,20 @@ namespace SinglePlay.Manager
 
         private void InitValue()
         {
+            _isGameEnd = false;
             _score = 0;
         }
 
         #endregion
+
+        public void GameEnd()
+        {
+            _isGameEnd = true;
+        }
+
+        public void RestartGame()
+        {
+            OnRestartGame?.Invoke();
+        }
     }
 }

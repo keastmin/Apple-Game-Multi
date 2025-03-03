@@ -1,40 +1,62 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class Apple : MonoBehaviour
+namespace SinglePlay.Apple
 {
-    [SerializeField] private int minNum = 1;
-    [SerializeField] private int maxNum = 9;
-
-    public TextMeshPro NumberText;
-    public GameObject AppleEdge;
-    public SpriteRenderer AppleSprite;
-    public Rigidbody2D AppleRigidbody;
-
-    private int _number;
-    public int Number // 숫자가 정해지면 사과의 텍스트도 변경
+    public class Apple : MonoBehaviour
     {
-        get
+        [SerializeField] private int minNum = 1;
+        [SerializeField] private int maxNum = 9;
+
+        [SerializeField] private float gravityForce = 4f;
+        [SerializeField] private float minDropForce = 10f;
+        [SerializeField] private float maxDropForce = 15f;
+
+        public TextMeshPro NumberText;
+        public GameObject AppleEdge;
+        public SpriteRenderer AppleSprite;
+        public Rigidbody2D AppleRigidbody;
+
+        private int _number;
+        public int Number // 숫자가 정해지면 사과의 텍스트도 변경
         {
-            return _number;
+            get
+            {
+                return _number;
+            }
+            set
+            {
+                _number = value;
+                NumberText.text = _number.ToString();
+            }
         }
-        set
+
+        /// <summary>
+        /// 사과 생성시 랜덤 숫자 지정
+        /// </summary>
+        public void SetNumber()
         {
-            _number = value;
-            NumberText.text = _number.ToString();
+            Number = Random.Range(minNum, maxNum + 1);
         }
-    }
 
-    private void Start()
-    {
-        // SetNumber();
-    }
+        public void DropApple(float dropTime)
+        {
+            AppleRigidbody.gravityScale = gravityForce;
+            AppleRigidbody.AddForce(GetRandomDirection() * GetRandomForce(), ForceMode2D.Impulse);
+        }
 
-    /// <summary>
-    /// 사과 생성시 랜덤 숫자 지정
-    /// </summary>
-    public void SetNumber()
-    {
-        Number = Random.Range(minNum, maxNum + 1);
+        private float GetRandomForce()
+        {
+            return UnityEngine.Random.Range(minDropForce, maxDropForce);
+        }
+
+        private Vector2 GetRandomDirection()
+        {
+            float x = UnityEngine.Random.Range(-1f, 1f);
+            float y = UnityEngine.Random.Range(0f, 1f);
+            Vector2 direction = new Vector2(x, y);
+            return direction.normalized;
+        }
     }
 }

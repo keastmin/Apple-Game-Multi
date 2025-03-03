@@ -21,6 +21,16 @@ public class ObjectPool : MonoBehaviour
         }
     }
 
+    public void InitPool(int size)
+    {
+        _poolQueue = new Queue<GameObject>();
+
+        for (int i = 0; i < size; i++)
+        {
+            CreateObject();
+        }
+    }
+
     private void CreateObject()
     {
         GameObject obj = Instantiate(poolObject, poolPosition, Quaternion.identity, transform);

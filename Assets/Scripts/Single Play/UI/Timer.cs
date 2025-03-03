@@ -12,6 +12,9 @@ public class Timer : MonoBehaviour
     private float _maxTime;
     private float _currentTime = 0f;
 
+    // properties
+    public float CurrentTime => _currentTime;
+
     private void Awake()
     {
         InitComponents();
@@ -51,16 +54,11 @@ public class Timer : MonoBehaviour
 
     private void FlowTime()
     {
-        if (_currentTime > 0f)
+        if (!GameManager.Instance.IsGameEnd)
         {
             timerSlider.value = _currentTime / _maxTime;
             _currentTime = Mathf.Max(0f, _currentTime - Time.deltaTime);
-        }
-        else if(_currentTime == 0 && !GameManager.Instance.IsGameEnd)
-        {
-            GameManager.Instance.GameEnd();
-            UIManager.Instance.TimeEnd();
-        }      
+        }   
     }
 
     #endregion

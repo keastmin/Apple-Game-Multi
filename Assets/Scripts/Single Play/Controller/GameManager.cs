@@ -48,7 +48,10 @@ namespace SinglePlay.Manager
 
         void Update()
         {
-
+            if(timer.CurrentTime <= 0 && !_isGameEnd)
+            {
+                GameEnd();
+            }
         }
 
         #region Init Methods
@@ -64,6 +67,7 @@ namespace SinglePlay.Manager
         public void GameEnd()
         {
             _isGameEnd = true;
+            UIManager.Instance.TimeEnd();
         }
 
         public void RestartGame()

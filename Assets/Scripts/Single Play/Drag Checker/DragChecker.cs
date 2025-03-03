@@ -1,14 +1,14 @@
+using SinglePlay.Apple;
+using SinglePlay.Manager;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class DragChecker : MonoBehaviour
 {
-    public enum CheckerState
-    {
-        Idle,
-        Dragging,
-        End
-    }
+    [Header("Component")]
+    [SerializeField] private AppleController appleController;
 
     [SerializeField] private GameObject checkerObject;
 
@@ -18,38 +18,39 @@ public class DragChecker : MonoBehaviour
     private Vector2 _startPos;
     private Vector2 _endPos;
 
-    private CheckerState _state = CheckerState.Idle;
-
-    public CheckerState State => _state;
     public float TopY => _checkerTransform.position.y + Mathf.Abs(_checkSpriteRenderer.size.y) / 2f;
     public float BottomY => _checkerTransform.position.y - Mathf.Abs(_checkSpriteRenderer.size.y) / 2f;
     public float LeftX => _checkerTransform.position.x - Mathf.Abs(_checkSpriteRenderer.size.x) / 2f;
     public float RightX => _checkerTransform.position.x + Mathf.Abs(_checkSpriteRenderer.size.x) / 2f;
 
-    public SpriteRenderer CheckerSpriteRenderer => _checkSpriteRenderer;
+    private int _appleSum = 0;
+    private List<(int, int)> _appleIndex; // (row, col)
 
     private void Start()
     {
-        if (!checkerObject.TryGetComponent(out _checkerTransform))
-        {
-            Debug.Log("실패: Transform");
-        }
-        if (!checkerObject.TryGetComponent(out _checkSpriteRenderer))
-        {
-            Debug.Log("실패: SpriteRenderer");
-        }
-        checkerObject.gameObject.SetActive(false);
+        checkerObject.TryGetComponent(out _checkerTransform);
+        checkerObject.TryGetComponent(out _checkSpriteRenderer);
+
+        InitChecker();
+        GameManager.Instance.OnRestartGame += InitChecker;
     }
 
     private void Update()
     {
-        _state = CheckerState.Idle;
         CheckMouseEvent();
+    }
+
+    private void InitChecker()
+    {
+        _appleIndex = new List<(int, int)>();
+        checkerObject.gameObject.SetActive(false);
+        _checkSpriteRenderer.size = Vector2.zero;
+        _checkerTransform.position = Vector2.zero;
     }
 
     private void CheckMouseEvent()
     {
-        if (!UIManager.Instance.MenuPanelActive && !UIManager.Instance.ScorePanelActive)
+        if (!UIManager.Instance.MenuPanelActive && !GameManager.Instance.IsGameEnd)
         {
             CheckerMouseDown();
             CheckerMouseDrag();
@@ -61,6 +62,7 @@ public class DragChecker : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            _appleSum = 0;
             InitCheckInfo();
             checkerObject.SetActive(true);
         }
@@ -80,9 +82,20 @@ public class DragChecker : MonoBehaviour
             Vector2 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             if (_endPos != currentMousePos)
             {
-                _state = CheckerState.Dragging;
                 _endPos = currentMousePos;
                 SetCheckerTransform();
+                _appleSum = CheckAppleNumbers(out _appleIndex);
+
+                if(_appleSum == 10)
+                {
+                    _checkSpriteRenderer.color = new Vector4(1, 0, 0, 0.4f);
+                    _appleIndex.ForEach(index => appleController.Apples[index.Item1, index.Item2].AppleEdge.SetActive(true));
+                }
+                else
+                {
+                    _checkSpriteRenderer.color = new Vector4(0, 1, 0, 0.4f);
+                    _appleIndex.ForEach(index => appleController.Apples[index.Item1, index.Item2].AppleEdge.SetActive(false));
+                }
             }
         }
     }
@@ -99,18 +112,43 @@ public class DragChecker : MonoBehaviour
         _checkerTransform.position = new Vector2(centerX, centerY);
     }
 
+    private int CheckAppleNumbers(out List<(int, int)> appleIndexList)
+    {
+        int sum = 0;
+        appleIndexList = new List<(int, int)>();
+        for(int i = 0; i < appleController.Row; i++)
+        {
+            for (int j = 0; j < appleController.Col; j++)
+            {
+                if (appleController.Apples[i, j] != null)
+                {
+                    Apple apple = appleController.Apples[i, j];
+                    Vector2 applePos = apple.transform.position;
+
+                    if (applePos.x > LeftX && applePos.x < RightX && applePos.y > BottomY && applePos.y < TopY)
+                    {
+                        sum += apple.Number;
+                        appleIndexList.Add((i, j));
+                    }
+                }
+            }
+        }
+
+        return sum;
+    }
+
     private void CheckerMouseUp()
     {
         if (Input.GetMouseButtonUp(0))
         {
-            _state = CheckerState.End;
-            CheckerSpriteRenderer.color = new Vector4(1, 0, 0, 0.4f);
+            _appleIndex.ForEach(index => appleController.Apples[index.Item1, index.Item2].AppleEdge.SetActive(false));
+            if (_appleSum == 10)
+            {
+                appleController.CorrectNumberApples(_appleIndex);
+            }
+
+            _checkSpriteRenderer.color = new Vector4(1, 0, 0, 0.4f);
             checkerObject.SetActive(false);
         }
-    }
-
-    public float[] GetCheckerSize()
-    {
-        return new float[] { LeftX, RightX, TopY, BottomY };
     }
 }

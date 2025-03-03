@@ -971,9 +971,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 703816060}
+  - component: {fileID: 703816062}
   - component: {fileID: 703816061}
   m_Layer: 0
-  m_Name: Board Image
+  m_Name: Apple Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -987,12 +988,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 703816059}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 13, y: 7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1656313780}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &703816061
 SpriteRenderer:
@@ -1046,6 +1047,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &703816062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703816059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e580c9399e6c3204b929de06ac063024, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &850390134
 GameObject:
   m_ObjectHideFlags: 0
@@ -1139,6 +1152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad453c6459a93d5459aaf105332a0b35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  appleController: {fileID: 1418994634}
   checkerObject: {fileID: 1844511619}
 --- !u!1 &924911863
 GameObject:
@@ -1882,6 +1896,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1418994633}
+  - component: {fileID: 1418994634}
   m_Layer: 0
   m_Name: Apple Generator
   m_TagString: Untagged
@@ -1904,6 +1919,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1418994634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418994632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49d73ea37d7ffb49a22cd89a989cc87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  row: 10
+  col: 17
+  appleDropTime: 3
+  appleBoard: {fileID: 703816062}
+  objectPool: {fileID: 472422333}
 --- !u!1 &1598286075
 GameObject:
   m_ObjectHideFlags: 0
@@ -2069,58 +2101,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &1656313779
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1656313780}
-  - component: {fileID: 1656313781}
-  m_Layer: 0
-  m_Name: Apple Board
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1656313780
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1656313779}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 703816060}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1656313781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1656313779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e580c9399e6c3204b929de06ac063024, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _row: 10
-  _col: 17
-  _apple: {fileID: 7948707955217037411, guid: daed53850c5dc1e4c8e21095ea247823, type: 3}
-  _board: {fileID: 703816059}
-  _boardSprite: {fileID: 703816061}
-  _objectPool: {fileID: 472422333}
-  _dragChecker: {fileID: 885536214}
 --- !u!1 &1811436055
 GameObject:
   m_ObjectHideFlags: 0
@@ -2689,7 +2669,7 @@ SceneRoots:
   - {fileID: 425762882}
   - {fileID: 850390136}
   - {fileID: 1418994633}
-  - {fileID: 1656313780}
+  - {fileID: 703816060}
   - {fileID: 885536213}
   - {fileID: 472422334}
   - {fileID: 924911865}

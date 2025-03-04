@@ -1184,7 +1184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerSlider: {fileID: 1639066965}
-  timeLimit: 8.8
+  timeLimit: 120
 --- !u!4 &924911865
 Transform:
   m_ObjectHideFlags: 0
